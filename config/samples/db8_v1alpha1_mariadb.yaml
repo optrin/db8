@@ -1,0 +1,6 @@
+apiVersion: db8.optrin.io/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb-sample
+spec:
+  # Add fields here
