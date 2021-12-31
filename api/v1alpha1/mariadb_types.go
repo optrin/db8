@@ -1,38 +1,42 @@
-/*
-Copyright 2021.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+// MariaDBArchitecture configures the database replication.
+type MariaDBArchitecture string
 
-// MariaDBSpec defines the desired state of MariaDB
-type MariaDBSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+const (
+	// MariaDBStandalone defines an architecture where a single primary replica is deployed.
+	MariaDBStandalone MariaDBArchitecture = "Standalone"
+)
 
-	// Foo is an example field of MariaDB. Edit mariadb_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+// IMPORTANT: Any new fields you add must have json tags for the fields to be serialized.
+
+// MariaDBReplica defines the configuration of a replica.
+type MariaDBReplica struct {
 }
 
-// MariaDBStatus defines the observed state of MariaDB
+// MariaDBSpec defines the desired state of MariaDB.
+type MariaDBSpec struct {
+	// IMPORTANT: Run "make" to regenerate code after modifying this file.
+
+	// Architecture configures the database replication architecture.
+	// +kubebuilder:default:=Standalone
+	Architecture MariaDBArchitecture `json:"architecture,omitempty"`
+
+	// Authentication contains all authentication settings.
+	Authentication AuthenticationConfig `json:"authentication"`
+
+	// Image contains all configuration related to the container image of the Pod.
+	Image ImageConfig `json:"image"`
+
+	// Primary contains the configuration specific to the primary replica.
+	Primary MariaDBReplica `json:"primary,omitempty"`
+}
+
+// MariaDBStatus defines the observed state of MariaDB.
 type MariaDBStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file

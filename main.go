@@ -71,7 +71,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "8f7450c9.optrin.io",
+		LeaderElectionID:       "db8.optrin.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

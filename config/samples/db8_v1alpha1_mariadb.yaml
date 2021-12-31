@@ -1,6 +1,60 @@
 apiVersion: db8.optrin.io/v1alpha1
 kind: MariaDB
 metadata:
-  name: mariadb-sample
+  # The name of your database instance.
+  name: dev
+  # Note that the database instance will by
+  # default be accessible across namespaces.
+  namespace: db8-system
 spec:
-  # Add fields here
+  # Supported values are: `Standalone`
+  architecture: Standalone
+
+  # Configure authentication settings.
+  authentication:
+    # The name of the Secret containing the `root` user's
+    # credentials. If the Secret does not exist, it will
+    # be created, where the name of the Secret will be
+    # formatted as `db8-mariadb-<instancename>-creds`.
+    secretName: db8-mariadb-dev-creds
+    # Set to `true` to prevent operator from auto-generating
+    # credentials if the supplied credentials are empty. Not
+    # recommended for production instances.
+    allowEmptyPasswords: false
+
+  # Configure all options related to the container image.
+  image:
+    registry: docker.io
+    repository: mariadb
+    tag: latest
+    pullPolicy: IfNotPresent
+    # Names of existing Secrets in the `db8-system`
+    # namespace containing containing credentials
+    # for a private container registry.
+    pullSecretNames:
+      - github
+      - quay
+
+  # Settings for the primary database replica.
+  primary:
+    # Data storage settings for this replica.
+    persistence:
+      # If set to `false` EmptyDir will be used
+      # as storage backend causing data NOT to
+      # be persisted between Pod restarts.
+      enabled: true
+      # The name of the PersistentVolumeClaim used to
+      # persist the data between Pod restarts. If the
+      # Secret does not exist, it will be created, where
+      # the name of the Secret will be formatted as
+      # `db8-mariadb-<instancename>-primary-<ordinal>-data`.
+      persistentVolumeClaimName: db8-mariadb-dev-primary-data
+
+    # CPU and memory requests and limits.
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
