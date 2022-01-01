@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -16,6 +17,11 @@ const (
 
 // MariaDBReplica defines the configuration of a replica.
 type MariaDBReplica struct {
+	// Persistence configures the settings for persistent data storage.
+	Persistence PersistenceConfig `json:"persistence,omitempty"`
+
+	// Resources defines the replica's resource requests and limits.
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // MariaDBSpec defines the desired state of MariaDB.
@@ -27,10 +33,10 @@ type MariaDBSpec struct {
 	Architecture MariaDBArchitecture `json:"architecture,omitempty"`
 
 	// Authentication contains all authentication settings.
-	Authentication AuthenticationConfig `json:"authentication"`
+	Authentication AuthenticationConfig `json:"authentication,omitempty"`
 
 	// Image contains all configuration related to the container image of the Pod.
-	Image ImageConfig `json:"image"`
+	Image ImageConfig `json:"image,omitempty"`
 
 	// Primary contains the configuration specific to the primary replica.
 	Primary MariaDBReplica `json:"primary,omitempty"`

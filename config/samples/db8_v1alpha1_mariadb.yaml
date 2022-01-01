@@ -49,6 +49,27 @@ spec:
       # the name of the Secret will be formatted as
       # `db8-mariadb-<instancename>-primary-<ordinal>-data`.
       persistentVolumeClaimName: db8-mariadb-dev-primary-data
+      # The name of the StorageClass used to provision
+      # the volume. Omitting this will cause the default
+      # storage class will be used.
+      storageClassName: ceph-ssd
+      # Size of the persistent volume.
+      size: 8Gi
+      # Annotations to add to the persistent volume claim.
+      annotations:
+        compliance.example.com/retention-interval: 365d
+      # Access modes for the persistent volume.
+      accessModes:
+        - ReadWriteOnce
+      # A selector to match an existing persistent volume.
+      selector:
+        matchLabels:
+          release: "stable"
+        matchExpressions:
+          - values:
+              - dev
+            operator: In
+            key: environment
 
     # CPU and memory requests and limits.
     resources:

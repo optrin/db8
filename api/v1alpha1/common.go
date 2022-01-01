@@ -2,6 +2,8 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // AuthenticationConfig configures the configuration of a database instance.
@@ -52,12 +54,27 @@ type PersistenceConfig struct {
 	// Secret does not exist, it will be created, where
 	// the name of the Secret will be formatted as
 	// `db8-mariadb-<instancename>-primary-<ordinal>-data`.
+	// +kubebuilder:validation:Optional
 	PersistentVolumeClaimName string `json:"persistentVolumeClaimName,omitempty"`
 
-	// TODO: Continue implementation.
-	// primary.persistence.storageClass	MariaDB primary persistent volume storage Class	""
-	// primary.persistence.annotations	MariaDB primary persistent volume claim annotations	{}
-	// primary.persistence.accessModes	MariaDB primary persistent volume access Modes	["ReadWriteOnce"]
-	// primary.persistence.size	MariaDB primary persistent volume size	8Gi
-	// primary.persistence.selector
+	// The name of the StorageClass used to provision
+	// the volume. If not specified, the default storage
+	// class will be used.
+	// +kubebuilder:validation:Optional
+	StorageClassName string `json:"storageClassName,omitempty"`
+
+	// Annotations to add to the persistent volume claim.
+	// +kubebuilder:validation:Optional
+	Annotations map[string]string `json:"annotations,omitempty"`
+
+	// Access modes for the persistent volume.
+	// +kubebuilder:validation:Optional
+	AccessModes []corev1.PersistentVolumeAccessMode `json:"accessModes,omitempty"`
+
+	// The size of the persistent volume.
+	Size resource.Quantity `json:"size,omitempty"`
+
+	// A selector to match an existing persistent volume.
+	// +kubebuilder:validation:Optional
+	Selector metav1.LabelSelector `json:"selector,omitempty"`
 }
